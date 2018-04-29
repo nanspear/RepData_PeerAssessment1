@@ -1,0 +1,234 @@
+---
+title: "Project Assignment 1"
+author: "Nannette Orsini Spear"
+date: "April 29, 2018"
+output: 
+  html_document: 
+    fig_caption: yes
+    keep_md: yes
+---
+
+#Loading and pre-processing the data.
+
+Load knitr package
+```{r load knitr, echo=TRUE}
+library(knitr)
+```
+
+Set the Working Directory.
+```{r set working directory, echo=TRUE}
+opts_knit$set(root.dir = "C:/RStudio/Coursera/Reproducible Research")
+```
+
+Read the dataset.
+```{r read data, echo=TRUE}
+activity <- read.csv("C:/RStudio/Coursera/Reproducible Research/Data Files/activity.csv",header = TRUE, sep = ",",stringsAsFactors = FALSE)
+str(activity)
+``` 
+
+Change date field from character to date.
+```{r date, echo=TRUE}
+activity$date <- as.Date(activity$date)
+class(activity$date)
+```
+
+#What is the mean total number of steps taken per day?
+
+Total number of steps each day.
+```{r mean, echo=TRUE}
+dailysteps <- aggregate(steps~date,activity,sum)
+dailysteps
+```
+
+Histogram of the total number of steps taken each day.
+```{r dailysteps, echo=TRUE}
+hist(dailysteps$steps,
+     xlab = "Total Steps per Day",
+     ylab = "Frequency of Days",
+     main = "Histogram of Total Number of Steps per Day",
+     col = "steelblue")
+```
+
+Mean number of steps taken each day.
+```{r dailymean, echo=TRUE}
+dailymean <- aggregate(steps~date,activity,mean)
+dailymean
+```
+
+Median number of steps taken each day.
+```{r dailymedian, echo=TRUE}
+dailymedian <- aggregate(steps~date,activity,median)
+dailymedian
+```
+
+#What is the average daily activity pattern?
+
+The average number of steps taken for each interval.
+```{r intervalmean, echo=TRUE}
+intervalmean <- aggregate(steps~interval, activity, mean)
+intervalmean
+```
+
+Each day has 288, five minute intervals.  The plot below represents the average number of steps for each interval across all days.
+```{r plot intervalmean, echo=TRUE}
+plot(intervalmean$interval, intervalmean$steps, type = "l", xlab = "5 Minute Intervals",
+     ylab = "Average Number of Steps", main = "Average Number of Steps per Interval",
+     col = "dark green", lwd = 1)
+```
+
+The 5-minute interval, on average and across all days, contains the maximum number of steps.
+```{r max intervalmean, echo=TRUE}
+intervalmean[which.max(intervalmean$steps),]
+```
+
+#Imputing Missing Values
+
+Total number of rows with NAs.
+```{r na, echo=TRUE}
+sum(is.na(activity$steps))
+```
+
+Use the average steps over all intervals and across all days in place of the missing values.
+```{r activitymean, echo=TRUE}
+activitymean <- mean(activity$steps,na.rm = TRUE)
+activitymean
+```
+
+New data set to impute missing values.
+```{r new data set, echo=TRUE}
+activity2 <- activity
+```
+
+#Imputing missing values:
+
+Assigning mean to 10/1/2012
+```{r Oct 1, echo=TRUE}
+summary(activity2[is.na(activity2$steps) & activity2$date == "2012-10-01",])
+activity2[is.na(activity2$steps) & activity2$date == "2012-10-01", "steps"] <- activitymean
+summary(activity2[activity2$date=="2012-10-01",])
+```
+
+Assigning mean to 10/8/2012
+```{r Oct 8, echo=TRUE}
+summary(activity2[is.na(activity2$steps) & activity2$date == "2012-10-08",])
+activity2[is.na(activity2$steps) & activity2$date == "2012-10-08", "steps"] <- activitymean
+summary(activity2[activity2$date=="2012-10-08",])
+```
+
+Assigning mean to 11/1/2012
+```{r Nov 1, echo=TRUE}
+summary(activity2[is.na(activity2$steps) & activity2$date == "2012-11-01",])
+activity2[is.na(activity2$steps) & activity2$date == "2012-11-01", "steps"] <- activitymean
+summary(activity2[activity2$date=="2012-11-01",])
+```
+
+Assigning mean to 11/4/2012
+```{r Nov 4, echo=TRUE}
+summary(activity2[is.na(activity2$steps) & activity2$date == "2012-11-04",])
+activity2[is.na(activity2$steps) & activity2$date == "2012-11-04", "steps"] <- activitymean
+summary(activity2[activity2$date=="2012-11-04",])
+```
+
+Assigning mean to 11/9/2012
+```{r Nov 9, echo=TRUE}
+summary(activity2[is.na(activity2$steps) & activity2$date == "2012-11-09",])
+activity2[is.na(activity2$steps) & activity2$date == "2012-11-09", "steps"] <- activitymean
+summary(activity2[activity2$date=="2012-11-09",])
+```
+
+Assigning mean to 11/10/2012
+```{r Nov 10, echo=TRUE}
+summary(activity2[is.na(activity2$steps) & activity2$date == "2012-11-10",])
+activity2[is.na(activity2$steps) & activity2$date == "2012-11-10", "steps"] <- activitymean
+summary(activity2[activity2$date=="2012-11-10",])
+```
+
+Assigning mean to 11/14/2012
+```{r Nov 14, echo=TRUE}
+summary(activity2[is.na(activity2$steps) & activity2$date == "2012-11-14",])
+activity2[is.na(activity2$steps) & activity2$date == "2012-11-14", "steps"] <- activitymean
+summary(activity2[activity2$date=="2012-11-14",])
+```
+
+Assigning mean to 11/30/2012
+```{r Nov 30, echo=TRUE}
+summary(activity2[is.na(activity2$steps) & activity2$date == "2012-11-30",])
+activity2[is.na(activity2$steps) & activity2$date == "2012-11-30", "steps"] <- activitymean
+summary(activity2[activity2$date=="2012-11-30",])
+```
+
+Total number of rows with NAs
+```{r remaining na, echo=TRUE}
+sum(is.na(activity2$steps))
+```
+
+Total number of steps each day
+```{r new daily steps na, echo=TRUE}
+dailysteps2 <- aggregate(steps~date,activity2,sum)
+dailysteps2
+```
+
+New Histogram of the total number of steps taken each day with the overall mean of dataset replacing the missing values.
+```{r new hist, echo=TRUE}
+library(ggplot2)
+
+hist(dailysteps2$steps,
+     xlab = "Total Steps per Day",
+     ylab = "Frequency of Days",
+     main = "Histogram of Total Number of Steps per Day",
+     col = "steelblue")
+```
+
+Comparison of the total number of steps per day.  Replacing the missing values with the overall mean increases the number of days having 10,000 to 15,000 steps per day.
+```{r comparison, echo=TRUE}
+par(mfrow = c(1,2), mar = c(4,4,2,1), oma = c(0,0,2,0))
+hist(dailysteps$steps,
+     xlab = "Total Steps per Day",
+     ylab = "Frequency of Days",
+     main = "Missing Values",
+     col = "steelblue")
+
+hist(dailysteps2$steps,
+     xlab = "Total Steps per Day",
+     ylab = "Frequency of Days",
+     main = "Mean Replacing Missing Values",
+     col = "steelblue")
+```
+
+Updated Mean number of steps taken each day
+```{r updated mean, echo=TRUE}
+dailymean2 <- aggregate(steps~date,activity2,mean)
+dailymean2
+```
+
+Updated Median number of steps taken each day
+```{r updated median, echo=TRUE}
+dailymedian2 <- aggregate(steps~date,activity2,median)
+dailymedian2
+```
+##Are there differences in activity patterns between weekdays and weekends?
+###Yes, weekends have more steps throughout the day compared to weekdays.
+###During the weekday, the average steps are highest in the early part of the day but drop significantly during the remainder of the day.  
+###During the weekends, activity appears more consistent throughout most of the day.
+
+Create new factor variables:  "weekday" and "weekend"
+```{r new variable, echo=TRUE}
+activity2$week <- ifelse(weekdays(activity2$date)%in% c("Saturday","Sunday"),"weekend", "weekday")
+activity2$week <- factor(activity2$week)
+str(activity2)
+```
+Average steps by interval across all weekdays and weekends
+```{r week, echo=TRUE}
+intervalmean2 <- aggregate(steps~interval + week, activity2, mean)
+intervalmean2
+```
+
+Plotting average steps by interval across Weekdays and Weekends
+```{r panel plot, echo=TRUE}
+library(ggplot2)
+ggplot(intervalmean2, aes(interval, steps)) +
+      geom_line(color = "blue", linetype = 1) + 
+      geom_smooth(method = "lm", size = 1, linetype = 3, color = "black") +
+      ggtitle(paste("Average Number of Steps Taken per Interval", "\n", "Across Weekdays and Weekends")) +
+      facet_wrap(~week)
+```
