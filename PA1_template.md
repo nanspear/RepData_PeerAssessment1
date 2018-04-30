@@ -1120,10 +1120,9 @@ dailymedian2
 ## 60 2012-11-29  0.0000
 ## 61 2012-11-30 37.3826
 ```
-##Are there differences in activity patterns between weekdays and weekends?
-###Yes, weekends have more steps throughout the day compared to weekdays.
-###During the weekday, the average steps are highest in the early part of the day but drop significantly during the remainder of the day.  
-###During the weekends, activity appears more consistent throughout most of the day.
+Are there differences in activity patterns between weekdays and weekends?
+
+Yes, weekends have more steps throughout the day compared to weekdays. During the weekday, the average steps are highest in the early part of the day but drop significantly during the remainder of the day. During the weekends, activity appears more consistent throughout most of the day.
 
 Create new factor variables:  "weekday" and "weekend"
 
